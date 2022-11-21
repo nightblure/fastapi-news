@@ -1,0 +1,8 @@
+<div class="list-group">
+    {% for category in categories %}
+    <a href="#" class="list-group-item list-group-item-action"> {{ category.title }} </a>
+    {# {% url 'category_route' category.title %} #}
+    {% endfor %}
+</div>
+
+<br>

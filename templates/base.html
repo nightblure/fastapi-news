@@ -1,0 +1,103 @@
+{# {% load static %} #}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> {% block title %} {% endblock %} </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+
+    <!-- MDB -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"
+    ></script>
+
+        <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+{# {% include 'inc/_navbar.html' %} #}
+
+{% block custom_block %}
+{% endblock %}
+
+<div class="container mt-3">
+
+    {#
+    {% block search %}
+    {% endblock %}
+    #}
+
+    <div class="row mt-3">
+
+        <div class="col-md-2">
+            {% block sidebar %}
+            {% endblock %}
+        </div>
+
+        <div class="col-md-10">
+
+            {% if messages %}
+
+            {% for msg in messages %}
+
+                {% if msg.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ msg }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-{{ msg.tags }}" role="alert">
+                        {{ msg }}
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+
+            {% endif %}
+
+            {% block content %} NOT IMPLEMENTED CONTENT BLOCK {% endblock %}
+
+            {#
+            {% if page_obj.has_other_pages %}
+                {% include 'inc/_paginator.html' %}
+            {% endif %}
+            #}
+
+        </div>
+
+    </div>
+
+</div>
+
+{#
+{% block footer %}
+{% endblock %}
+#}
+
+</body>
+
+</html>

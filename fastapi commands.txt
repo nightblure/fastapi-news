@@ -1,0 +1,7 @@
+// старт сервера
+poetry shell
+uvicorn main:app --reload
+
+// миграции alembic
+    * генерация файла миграции (аналог python manage.py makemigrations): alembic revision --autogenerate -m "<comment>"
+    * миграция (аналог python manage.py migrate): alembic upgrade head

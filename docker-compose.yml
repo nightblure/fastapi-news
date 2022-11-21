@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+
+  fastapi_db:
+    container_name: fastapi_postgres
+    image: postgres
+    environment:
+      POSTGRES_DB: "fastapi_site_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - 5435:5432
+    volumes:
+      - ./fastapi_postgres:/var/lib/postgresql/dat
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      

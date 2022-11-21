@@ -1,0 +1,17 @@
+<form method="post" enctype="multipart/form-data" action="{% url 'like_route' news_item.pk %}">
+
+    {% csrf_token %}
+
+    {% if request.user.is_authenticated %}
+
+        {% if news_item.pk in user_liked_posts %}
+            <button type="submit" class="btn btn-danger btn-rounded" name="unlike"> 🖤 </button>
+        {% else %}
+            <button type="submit" class="btn btn-outline-danger btn-rounded" name="like"> ♡ </button>
+        {% endif %}
+
+    {% endif %}
+
+    <a href="{{ news_item.get_absolute_url }}" class="btn btn-primary"> Читать далее... </a>
+
+</form>
