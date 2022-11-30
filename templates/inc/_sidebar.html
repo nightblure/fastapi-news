@@ -1,7 +1,11 @@
 <div class="list-group">
-    {% for category in categories %}
-    <a href="#" class="list-group-item list-group-item-action"> {{ category.title }} </a>
-    {# {% url 'category_route' category.title %} #}
+    {% for category_title in categories_info %}
+
+    {# {{ url_for 'category_route' category.title }} #}
+    <a href="#" class="list-group-item list-group-item-action"> {{ category_title }}
+        <span class="badge rounded-pill text-bg-primary"> {{ categories_info[category_title] }} </span>
+    </a>
+
     {% endfor %}
 </div>
 

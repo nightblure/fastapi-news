@@ -1,24 +1,31 @@
 from datetime import datetime
 
+import databases
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
 from sqlalchemy import (
     Column, String, Integer,
     Boolean, ForeignKey, DateTime,
-    sql, Table
+    sql
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint
+from sqlalchemy.ext.declarative import declarative_base
 
+from core.settings import DATABASE_URL
+
+database = databases.Database(DATABASE_URL)
 Base = declarative_base()
 
 
-class User(Base):
+class User(SQLAlchemyBaseUserTableUUID, Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, index=True, unique=True)
-    name = Column(String, unique=True)
-    email = Column(String, unique=True)
-    password = Column(String)
-    is_admin = Column(Boolean, default=False)
+    # email = Column(String, unique=True)
+    # is_admin = Column(Boolean, default=False)
+    # hashed_password = Column(String)
+    # likes = relationship('Like', uselist=True)
+    # путь к аватарке. нужна таблица путей к картинкам аватаров пользователей
 
 
 class Category(Base):
@@ -37,33 +44,47 @@ class News(Base):
     content = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=datetime.now)
-    # image = models.ImageField(upload_to='images/%Y/%m/%d/', null=True, blank=True)
+    # image = models.ImageField(upload_to='images/%Y/%m/%d/', null=True, blank=True) # todo imagefield
     is_published = Column(Boolean, default=True, nullable=False)
-    category = Column(Integer, ForeignKey('categories.id'))  # todo cascade on delete
+
+    category_id = Column(Integer, ForeignKey('categories.id'))  # todo cascade on delete
+
+    """ uselist=False означает связь 1 к 1. True - один-ко-многим
+    в модели Category неявно создастся атрибут news_list, 
+    по которому будут доступны все новости: category.news_list,
+    а в модели News останется атрибут category """
+    category = relationship('Category', backref='news_list', uselist=False, lazy='subquery')
+
     views_count = Column(Integer, default=0)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    # uselist=False означает связь 1 к 1. True - один-ко-многим
-    user = relationship('User', backref='author', uselist=False)
+    author = relationship('User', backref='news_list', uselist=False, lazy='subquery')
+
+    likes = relationship('Like', uselist=True, lazy='subquery')
+    # путь к картинке. нужна таблица путей к картинкам новостей
+
+
+class Like(Base):
+    __tablename__ = 'likes'
+    __table_args__ = (
+        UniqueConstraint('user_id', 'news_id'),
+    )
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    news_id = Column(Integer, ForeignKey('news.id'))
 
 
 # реализация связи многие-ко-многим
-like = Table(
-    'likes', Base.metadata,
-    Column('user_id', Integer(), ForeignKey('news.id')),
-    Column('news_id', Integer(), ForeignKey('users.id'))
-)
-
-
 class Comment(Base):
     __tablename__ = 'comments'
 
     id = Column(Integer, primary_key=True, index=True, unique=True)
 
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    user = relationship('User', backref='user', uselist=False)
+    author = relationship('User', backref='comments', uselist=True, lazy='subquery')
 
     news_id = Column(Integer, ForeignKey('news.id'), nullable=False)
-    news = relationship('News', backref='news', uselist=False)
+    news = relationship('News', backref='comments_list', uselist=True, lazy='subquery')
 
     text = Column(String)
     created = Column(DateTime(timezone=True), server_default=sql.func.now())
