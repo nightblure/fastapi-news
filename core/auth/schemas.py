@@ -1,9 +1,10 @@
 import uuid
+from pydantic import BaseModel
 
 from fastapi_users import schemas
 
 
-class UserRead(schemas.BaseUser[uuid.UUID]):
+class UserRead(schemas.BaseUser[int]):
     pass
 
 
@@ -13,3 +14,8 @@ class UserCreate(schemas.BaseUserCreate):
 
 class UserUpdate(schemas.BaseUserUpdate):
     pass
+
+
+class SessionData(BaseModel):
+    username: str
+

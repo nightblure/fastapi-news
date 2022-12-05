@@ -29,11 +29,6 @@ async def v(request: Request):
     pass
 
 
-
-@router.post('create_category', response_class=HTMLResponse, name='logout_route')
-async def v(request: Request):
-    pass
-
 @router.post('create_category', response_class=HTMLResponse, name='edit_profile_route')
 async def v(request: Request):
     pass

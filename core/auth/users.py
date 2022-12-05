@@ -1,4 +1,4 @@
-import uuid
+# import uuid
 from typing import Optional, Union
 
 from fastapi import Depends, Request
@@ -20,6 +20,7 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users.password import PasswordHelper
 from passlib.context import CryptContext
 
+from core.services.redis_ import get_redis_strategy
 from news_app.models import User
 from core.db import get_user_db  # , User
 
@@ -30,15 +31,15 @@ SECRET = "SECRET"
 
 
 # class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
+class UserManager(IntegerIDMixin, BaseUserManager[User, IntegerIDMixin]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
-    async def validate_password(self,password: str, user: User) -> None:
-        if len(password) < 8:
-            raise InvalidPasswordException(
-                reason="Password should be at least 8 characters"
-            )
+    async def validate_password(self, password: str, user: User) -> None:
+        # if len(password) < 8:
+        #     raise InvalidPasswordException(
+        #         reason="Password should be at least 8 characters"
+        #     )
         if user.email in password:
             raise InvalidPasswordException(
                 reason="Password should not contain e-mail"
@@ -76,10 +77,11 @@ def get_jwt_strategy() -> JWTStrategy:
 auth_backend = AuthenticationBackend(
     name="jwt",
     transport=bearer_transport,
-    get_strategy=get_jwt_strategy,
+    # get_strategy=get_jwt_strategy,
+    get_strategy=get_redis_strategy,
 )
 
-fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
+fastapi_users = FastAPIUsers[User, IntegerIDMixin](get_user_manager, [auth_backend])
 
 # в чем отличие current_user от current_active_user?? протестить во вьюхе
 current_user = fastapi_users.current_user()

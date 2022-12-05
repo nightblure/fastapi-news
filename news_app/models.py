@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import databases
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import (
     Column, String, Integer,
     Boolean, ForeignKey, DateTime,
@@ -17,7 +17,7 @@ database = databases.Database(DATABASE_URL)
 Base = declarative_base()
 
 
-class User(SQLAlchemyBaseUserTableUUID, Base):
+class User(SQLAlchemyBaseUserTable, Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, index=True, unique=True)

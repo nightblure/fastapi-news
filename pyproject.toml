@@ -1,26 +1,27 @@
 [tool.poetry]
-name = "fastapi news"
+name = "fastapi-news"
 version = "0.1.0"
 description = ""
 authors = ["night <vanobel159@gmail.com>"]
 readme = "README.md"
+packages = [{include = "fastapi_news"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
-fastapi = "^0.87.0"
+python = ">=3.7,<4.0"
+fastapi = "^0.88.0"
 uvicorn = "^0.20.0"
-alembic = "^1.8.1"
-python-dotenv = "^0.21.0"
-fastapi-sqlalchemy = "^0.2.1"
-psycopg2-binary = "^2.9.5"
-sqlmodel = "^0.0.8"
-jinja2 = "^3.1.2"
+psycopg2 = "^2.9.5"
+fastapi-users = {extras = ["redis", "sqlalchemy"], version = "^10.2.1"}
 databases = "^0.6.2"
+python-dotenv = "^0.21.0"
+jinja2 = "^3.1.2"
 asyncpg = "^0.27.0"
-fastapi-users = {extras = ["sqlalchemy"], version = "^10.2.1"}
 asyncio = "^3.4.3"
 argon2-cffi = "^21.3.0"
-httpx = "^0.23.1"
+aioredis = "^2.0.1"
+aiohttp = "^3.8.3"
+itsdangerous = "^2.1.2"
+fastapi-sessions = "^0.3.2"
 
 
 [build-system]
